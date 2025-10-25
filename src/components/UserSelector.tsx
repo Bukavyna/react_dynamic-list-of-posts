@@ -2,18 +2,15 @@ import React, { useState, useEffect, useRef, Ref } from 'react';
 import { User } from '../types/User';
 
 interface UserSelectorProps {
-  users: User[]; // список користувачів, який ми отримали з API
-  selectedId: number | null; // id вибраного користувача (або null, якщо нікого не вибрано)
-  onSelect: (userId: number | null) => void; // функція, яку ми викликаємо, коли користувач натискає на когось
+  users: User[];
+  selectedId: number | null;
+  onSelect: (userId: number | null) => void;
 }
 
 export const UserSelector: React.FC<UserSelectorProps> = ({
-  //  Ми створюємо функціональний React-компонент UserSelector.
-  // Він приймає три пропси:
-
-  users, // users — масив користувачів;
-  selectedId, // selectedId — ID обраного користувача;
-  onSelect, // onSelect — функцію, яку треба викликати, коли користувача обрано.
+  users,
+  selectedId,
+  onSelect,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);

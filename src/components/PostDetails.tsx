@@ -1,10 +1,10 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {Loader} from './Loader';
-import {NewCommentForm} from './NewCommentForm';
-import {Post} from '../types/Post';
-import {client} from '../utils/fetchClient';
-import {Comment} from '../types/Comment';
-import {UserWarning} from './UserWarning';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Loader } from './Loader';
+import { NewCommentForm } from './NewCommentForm';
+import { Post } from '../types/Post';
+import { client } from '../utils/fetchClient';
+import { Comment } from '../types/Comment';
+import { UserWarning } from './UserWarning';
 
 interface PostDetailsProps {
   post: Post;
@@ -12,9 +12,9 @@ interface PostDetailsProps {
 }
 
 export const PostDetails: React.FC<PostDetailsProps> = ({
-                                                          post,
-                                                          selectedUserId
-                                                        }) => {
+  post,
+  selectedUserId,
+}) => {
   const [hasError, setHasError] = useState(false);
   const [comments, setComments] = useState<Comment[] | null>(null);
   const [areCommentsLoading, setAreCommentsLoading] = useState(false);
@@ -42,12 +42,10 @@ export const PostDetails: React.FC<PostDetailsProps> = ({
 
   useEffect(() => {
     void loadComments();
-    // Приховування форми при публікації змін
-    // setIsFormVisible(false);
+    setIsFormVisible(false);
   }, [loadComments]);
 
   useEffect(() => {
-    // Приховуємо форму коментарів, коли вибір користувача змінюється
     if (isFormVisible) {
       setIsFormVisible(false);
     }
@@ -58,7 +56,6 @@ export const PostDetails: React.FC<PostDetailsProps> = ({
   };
 
   const handleDelete = async (id: number) => {
-    // Оптимістичне видалення
     const originalComments = comments;
 
     setComments((prev) =>
@@ -69,15 +66,14 @@ export const PostDetails: React.FC<PostDetailsProps> = ({
     try {
       await client.delete(`/comments/${id}`);
     } catch {
-      // Скасувати стан після помилки
       setComments(originalComments);
       setDeleteError(id);
     }
   };
 
   const handleRetryDelete = (id: number) => {
-    setDeleteError(null); // Очистити повідомлення про помилку
-    void handleDelete(id); // Повторити видалення
+    setDeleteError(null);
+    void handleDelete(id);
   };
 
   return (
@@ -91,7 +87,7 @@ export const PostDetails: React.FC<PostDetailsProps> = ({
       </div>
 
       <div className="block">
-        {areCommentsLoading && <Loader/>}
+        {areCommentsLoading && <Loader />}
 
         {hasError && (
           <UserWarning
@@ -160,7 +156,7 @@ export const PostDetails: React.FC<PostDetailsProps> = ({
       </div>
 
       {isFormVisible && (
-        <NewCommentForm postId={post.id} onCommentAdd={handleCommentAdd}/>
+        <NewCommentForm postId={post.id} onCommentAdd={handleCommentAdd} />
       )}
     </div>
   );

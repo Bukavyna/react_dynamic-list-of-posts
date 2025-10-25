@@ -10,10 +10,8 @@ export const PostsList: React.FC<PostsListProps> = ({
   posts,
   onSelectPost,
 }) => {
-  // Стан для активного поста
   const [activePostId, setActivePostId] = useState<number | null>(null);
 
-  // Обробник кліку
   const handleOpenPost = (post: Post) => {
     if (activePostId === post.id) {
       setActivePostId(null);

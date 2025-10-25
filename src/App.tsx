@@ -16,21 +16,17 @@ import { User } from './types/User';
 import { Post } from './types/Post';
 
 export const App = () => {
-  // СТАН ДЛЯ КОРИСТУВАЧІВ
   const [users, setUsers] = useState<User[]>([]); // — список користувачів
   const [isUsersLoading, setIsUsersLoading] = useState(false);
   const [, setUsersError] = useState<string | null>(null);
 
-  // СТАН ДЛЯ ПОСТІВ
   const [posts, setPosts] = useState<Post[]>([]);
   const [isPostsLoading, setIsPostsLoading] = useState(false);
   const [postsError, setPostsError] = useState<string | null>(null);
 
-  // Решта станів
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null); // — id вибраного користувача
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
-  // З асинхронним завантаженням користувачів
   useEffect(() => {
     const loadUsers = async () => {
       setIsUsersLoading(true);
@@ -50,7 +46,6 @@ export const App = () => {
     loadUsers();
   }, []);
 
-  // Завантаження постів після вибору користувача
   useEffect(() => {
     if (selectedUserId === null) {
       setPosts([]);
@@ -88,21 +83,18 @@ export const App = () => {
     <main className="section">
       <div className="container">
         <div className="tile is-ancestor">
-          {/* ===== Ліва панель: вибір користувача та пости ===== */}
           <div className="tile is-parent">
             <div className="tile is-child box is-success">
-              {/* ===== User Selector ===== */}
               <div className="block">
                 {isUsersLoading && <Loader />}
 
-                <UserSelector // — компонент, який дозволяє вибрати користувача
+                <UserSelector
                   users={users}
                   onSelect={handleUserSelect}
                   selectedId={selectedUserId}
                 />
               </div>
 
-              {/* ===== Main Content ===== */}
               <div className="block" data-cy="MainContent">
                 {selectedUserId === null && (
                   <p data-cy="NoSelectedUser">No user selected</p>
@@ -135,7 +127,6 @@ export const App = () => {
             </div>
           </div>
 
-          {/* ===== Sidebar ===== */}
           <div
             data-cy="Sidebar"
             className={classNames(

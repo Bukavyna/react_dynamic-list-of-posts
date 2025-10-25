@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { client } from '../utils/fetchClient';
-import { Comment } from '../types/Comment';
+import React, {useState} from 'react';
+import {client} from '../utils/fetchClient';
+import {Comment} from '../types/Comment';
 
 interface NewCommentFormProps {
   postId: number | string;
@@ -8,9 +8,9 @@ interface NewCommentFormProps {
 }
 
 export const NewCommentForm: React.FC<NewCommentFormProps> = ({
-  postId,
-  onCommentAdd,
-}) => {
+                                                                postId,
+                                                                onCommentAdd,
+                                                              }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [text, setText] = useState('');
@@ -28,52 +28,45 @@ export const NewCommentForm: React.FC<NewCommentFormProps> = ({
   const handleSubmitClick = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Незалежна перевірка кожного поля
     const nameEmpty = name.trim() === '';
     const mailEmpty = email.trim() === '';
     const textEmpty = text.trim() === '';
 
-    // Незалежне встановлення стану помилки для кожного поля
     setHasEmailError(mailEmpty);
     setHasNameError(nameEmpty);
     setHasTextError(textEmpty);
 
-    // Загальна перевірка для блокування подачі форми
     if (mailEmpty || nameEmpty || textEmpty) {
       return;
     }
 
-    // --- ЛОГІКА УСПІШНОЇ ПОДАЧІ ---
-    const newComment = {
+    const newComment: Partial<Comment> = {
       postId: Number(postId),
       name: name.trim(),
       email: email.trim(),
       body: text.trim(),
-      id: Math.floor(Math.random() * 1000000),
     };
 
     setIsLoading(true);
 
     try {
-      const addedComment = await client.post('/comments', newComment);
+      const addedComment = await client.post<Comment>('/comments', newComment);
 
       clearTextField();
       onCommentAdd(addedComment as Comment);
     } catch (error) {
+
       clearTextField();
-      onCommentAdd(newComment as Comment);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Очищення форми
   const clearAllField = () => {
     setName('');
     setEmail('');
     setText('');
 
-    // Додатково скидаємо всі стани помилок
     setHasNameError(false);
     setHasEmailError(false);
     setHasTextError(false);
@@ -128,7 +121,7 @@ export const NewCommentForm: React.FC<NewCommentFormProps> = ({
           />
 
           <span className="icon is-small is-left">
-            <i className="fas fa-user" />
+            <i className="fas fa-user"/>
           </span>
 
           {hasNameError && (
@@ -136,7 +129,7 @@ export const NewCommentForm: React.FC<NewCommentFormProps> = ({
               className="icon is-small is-right has-text-danger"
               data-cy="ErrorIcon"
             >
-              <i className="fas fa-exclamation-triangle" />
+              <i className="fas fa-exclamation-triangle"/>
             </span>
           )}
         </div>
@@ -165,7 +158,7 @@ export const NewCommentForm: React.FC<NewCommentFormProps> = ({
           />
 
           <span className="icon is-small is-left">
-            <i className="fas fa-envelope" />
+            <i className="fas fa-envelope"/>
           </span>
 
           {hasEmailError && (
@@ -173,7 +166,7 @@ export const NewCommentForm: React.FC<NewCommentFormProps> = ({
               className="icon is-small is-right has-text-danger"
               data-cy="ErrorIcon"
             >
-              <i className="fas fa-exclamation-triangle" />
+              <i className="fas fa-exclamation-triangle"/>
             </span>
           )}
         </div>
