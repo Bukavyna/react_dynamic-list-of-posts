@@ -5,15 +5,15 @@ import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import './App.scss';
 
-import {useEffect, useState} from 'react';
-import {client} from './utils/fetchClient';
-import {PostsList} from './components/PostsList';
-import {PostDetails} from './components/PostDetails';
-import {UserSelector} from './components/UserSelector';
-import {Loader} from './components/Loader';
+import { useEffect, useState } from 'react';
+import { client } from './utils/fetchClient';
+import { PostsList } from './components/PostsList';
+import { PostDetails } from './components/PostDetails';
+import { UserSelector } from './components/UserSelector';
+import { Loader } from './components/Loader';
 
-import {User} from './types/User';
-import {Post} from './types/Post';
+import { User } from './types/User';
+import { Post } from './types/Post';
 
 export const App = () => {
   // СТАН ДЛЯ КОРИСТУВАЧІВ
@@ -93,7 +93,7 @@ export const App = () => {
             <div className="tile is-child box is-success">
               {/* ===== User Selector ===== */}
               <div className="block">
-                {isUsersLoading && <Loader/>}
+                {isUsersLoading && <Loader />}
 
                 <UserSelector // — компонент, який дозволяє вибрати користувача
                   users={users}
@@ -107,7 +107,7 @@ export const App = () => {
                 {selectedUserId === null && (
                   <p data-cy="NoSelectedUser">No user selected</p>
                 )}
-                {selectedUserId !== null && isPostsLoading && <Loader/>}
+                {selectedUserId !== null && isPostsLoading && <Loader />}
                 {postsError && (
                   <div
                     className="notification is-danger"
@@ -129,7 +129,7 @@ export const App = () => {
                   )}
 
                 {posts.length > 0 && (
-                  <PostsList posts={posts} onSelectPost={setSelectedPost}/>
+                  <PostsList posts={posts} onSelectPost={setSelectedPost} />
                 )}
               </div>
             </div>
@@ -143,7 +143,7 @@ export const App = () => {
               'is-parent',
               'is-8-desktop',
               'Sidebar',
-              {'Sidebar--open': selectedPost !== null}
+              { 'Sidebar--open': selectedPost !== null }
             )}
           >
             <div className="tile is-child box is-success ">
