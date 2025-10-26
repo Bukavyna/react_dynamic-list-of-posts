@@ -16,7 +16,7 @@ import { User } from './types/User';
 import { Post } from './types/Post';
 
 export const App = () => {
-  const [users, setUsers] = useState<User[]>([]); // — список користувачів
+  const [users, setUsers] = useState<User[]>([]);
   const [isUsersLoading, setIsUsersLoading] = useState(false);
   const [, setUsersError] = useState<string | null>(null);
 

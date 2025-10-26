@@ -1,6 +1,8 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {client} from '../utils/fetchClient';
 import {Comment} from '../types/Comment';
+
+type NewCommentData = Omit<Comment, 'id'>;
 
 interface NewCommentFormProps {
   postId: number | string;
@@ -9,21 +11,27 @@ interface NewCommentFormProps {
 
 export const NewCommentForm: React.FC<NewCommentFormProps> = ({
                                                                 postId,
-                                                                onCommentAdd,
+                                                                onCommentAdd
                                                               }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [text, setText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const [hasNameError, setHasNameError] = useState(false);
   const [hasEmailError, setHasEmailError] = useState(false);
   const [hasTextError, setHasTextError] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [, setApiError] = useState<string | null>(null);
 
-  const clearTextField = () => {
+  const clearTextField = useCallback(() => {
     setText('');
-  };
+
+    setHasNameError(false);
+    setHasEmailError(false);
+    setHasTextError(false);
+    setApiError(null);
+  }, []);
 
   const handleSubmitClick = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -40,11 +48,11 @@ export const NewCommentForm: React.FC<NewCommentFormProps> = ({
       return;
     }
 
-    const newComment: Partial<Comment> = {
+    const newComment: NewCommentData = {
       postId: Number(postId),
       name: name.trim(),
       email: email.trim(),
-      body: text.trim(),
+      body: text.trim()
     };
 
     setIsLoading(true);
@@ -55,8 +63,9 @@ export const NewCommentForm: React.FC<NewCommentFormProps> = ({
       clearTextField();
       onCommentAdd(addedComment as Comment);
     } catch (error) {
-
-      clearTextField();
+      setApiError(
+        'Failed to submit comment. Please check your connection and try again.'
+      );
     } finally {
       setIsLoading(false);
     }
@@ -70,36 +79,7 @@ export const NewCommentForm: React.FC<NewCommentFormProps> = ({
     setHasNameError(false);
     setHasEmailError(false);
     setHasTextError(false);
-  };
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-
-    setEmail(newValue);
-
-    if (hasEmailError && newValue.trim() !== '') {
-      setHasEmailError(false);
-    }
-  };
-
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-
-    setName(newValue);
-
-    if (hasNameError && newValue.trim() !== '') {
-      setHasNameError(false);
-    }
-  };
-
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newValue = e.target.value;
-
-    setText(newValue);
-
-    if (hasTextError && newValue.trim() !== '') {
-      setHasTextError(false);
-    }
+    setApiError(null);
   };
 
   return (
@@ -117,7 +97,11 @@ export const NewCommentForm: React.FC<NewCommentFormProps> = ({
             placeholder="Name Surname"
             className={`input ${hasNameError ? 'is-danger' : ''}`}
             value={name}
-            onChange={handleNameChange}
+            onChange={(event) => {
+              setName(event.target.value);
+              setHasNameError(false);
+            }}
+            disabled={isLoading}
           />
 
           <span className="icon is-small is-left">
@@ -154,7 +138,11 @@ export const NewCommentForm: React.FC<NewCommentFormProps> = ({
             placeholder="email@test.com"
             className={`input ${hasEmailError ? 'is-danger' : ''}`}
             value={email}
-            onChange={handleEmailChange}
+            onChange={(event) => {
+              setEmail(event.target.value);
+              setHasEmailError(false);
+            }}
+            disabled={isLoading}
           />
 
           <span className="icon is-small is-left">
@@ -190,7 +178,11 @@ export const NewCommentForm: React.FC<NewCommentFormProps> = ({
             placeholder="Type comment here"
             className={`textarea ${hasTextError ? 'is-danger' : ''}`}
             value={text}
-            onChange={handleTextChange}
+            onChange={(event) => {
+              setText(event.target.value);
+              setHasTextError(false);
+            }}
+            disabled={isLoading}
           />
         </div>
 
